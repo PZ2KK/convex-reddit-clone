@@ -30,7 +30,7 @@ const SubredditPage = () => {
       </div>
       <div className="posts-container">
         <div className="no-posts">
-          <p>No posts yet. Be the first to post</p>
+          <p>No posts yet. Be the first to post.</p>
         </div>
       </div>
     </div>

@@ -47,6 +47,8 @@
 }
 
 .media-input-container {
+  display: flex;
+  flex-direction: column;
   border: 1px solid #edeff1;
   border-radius: 4px;
   padding: 16px;
@@ -65,6 +67,7 @@
   color: #1c1c1c;
   font-size: 14px;
   transition: background-color 0.2s;
+  max-width: 150px;
 }
 
 .image-upload-label:hover {
@@ -80,8 +83,9 @@
   margin-top: 16px;
   position: relative;
   display: inline-block;
-  width: 500px;
-  height: 300px;
+  width: 100%;
+  max-width: 500px;
+  aspect-ratio: 5 / 3;
   overflow: hidden;
 }
 
