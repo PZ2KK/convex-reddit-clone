@@ -2,7 +2,7 @@ import { FaPlus, FaReddit, FaUser } from "react-icons/fa";
 import { SignInButton, UserButton, useUser } from "@clerk/clerk-react";
 import { Authenticated, Unauthenticated } from "convex/react";
 import { Link, useNavigate } from "react-router-dom";
-import CreateDropdown from "./CreateDropDown";
+import CreateDropdown from "./CreateDropdown";
 import { useState } from "react";
 import "../styles/Navbar.css";
 

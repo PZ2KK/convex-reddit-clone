@@ -61,10 +61,10 @@ async function getEnrichedPost(
   };
 }
 
-async function getEnrichedPosts(
+export const getEnrichedPosts = async (
   ctx: QueryCtx,
   posts: Doc<"post">[]
-): Promise<EnrichedPost[]> {
+): Promise<EnrichedPost[]> => {
   return Promise.all(posts.map((post) => getEnrichedPost(ctx, post)));
 }
 
