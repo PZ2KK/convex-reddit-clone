@@ -4,6 +4,7 @@ import { Authenticated, Unauthenticated } from "convex/react";
 import { Link, useNavigate } from "react-router-dom";
 import CreateDropdown from "./CreateDropdown";
 import { useState } from "react";
+import SearchBar from "./SearchBar";
 import "../styles/Navbar.css";
 
 const Navbar = () => {
@@ -20,7 +21,7 @@ const Navbar = () => {
             <span className="site-name">reddit</span>
           </div>
         </Link>
-        <div>Searchbar</div>
+        <SearchBar />
         <div className="nav-actions">
           <Unauthenticated>
             <SignInButton mode="modal">
@@ -42,7 +43,7 @@ const Navbar = () => {
             <button
               className="icon-button"
               onClick={() => user?.username && navigate(`/u/${user.username}`)}
-              title="View Profile"
+              title="View Posts"
             >
               <FaUser />
             </button>

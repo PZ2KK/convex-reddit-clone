@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "convex/react";
+import { useNavigate } from "react-router-dom";
 import { api } from "../../convex/_generated/api";
 import "../styles/CreateCommunityModal.css";
 
@@ -12,13 +13,14 @@ const CreateCommunityModal = ({
   isOpen,
   onClose,
 }: CreateCommunityModalProps) => {
+  if (!isOpen) return null;
+  
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const createSubreddit = useMutation(api.subreddit.create);
-
-  if (!isOpen) return null;
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,6 +45,8 @@ const CreateCommunityModal = ({
       .then((result) => {
         console.log(result);
         onClose();
+        // Navigate to the newly created subreddit
+        navigate(`/r/${name}`);
       })
       .catch((error) => {
         setError(`Failed to create community. ${error.data.message}`);

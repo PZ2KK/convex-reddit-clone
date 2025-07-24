@@ -1,5 +1,7 @@
+import { Feed } from "../components/Feed";
+
 const HomePage = () => {
-    return <div>HomePage</div>
+    return <div className="content-container"><Feed/></div>
 }
 
 export default HomePage

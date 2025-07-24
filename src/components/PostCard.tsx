@@ -8,6 +8,7 @@ import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
 import Comment from "./Comment";
 import "../styles/PostCard.css";
+import { hasDownvoted, hasUpvoted } from "../../convex/vote";
 
 interface Post {
   _id: Id<"post">;
@@ -50,6 +51,46 @@ interface CommentSectionProps {
   onSubmit: (content: string) => void;
   signedIn: boolean;
 }
+
+interface VoteButtonsProps {
+  voteCounts: { total: number; upvotes: number; downvotes: number } | undefined;
+  hasUpvoted: boolean | undefined;
+  hasDownvoted: boolean | undefined;
+  onUpvote: () => void;
+  onDownvote: () => void;
+}
+
+const VoteButtons = ({
+  voteCounts,
+  hasUpvoted,
+  hasDownvoted,
+  onUpvote,
+  onDownvote,
+}: VoteButtonsProps) => {
+  return (
+    <div className="post-votes">
+      <span className="vote-count upvote-count">
+        {voteCounts?.upvotes ?? 0}
+      </span>
+      <button
+        className={`vote-button ${hasUpvoted ? "upvoted" : ""}`}
+        onClick={onUpvote}
+      >
+        <TbArrowBigUp size={24} />
+      </button>
+      <span className="vote-count total-count">{voteCounts?.total ?? 0}</span>
+      <span className="vote-count downvote-count">
+        {voteCounts?.downvotes ?? 0}
+      </span>
+      <button
+        className={`vote-button ${hasDownvoted ? "downvoted" : ""}`}
+        onClick={onDownvote}
+      >
+        <TbArrowBigDown size={24} />
+      </button>
+    </div>
+  );
+};
 
 const PostHeader = ({
   author,
@@ -171,8 +212,25 @@ const PostCard = ({
 
   const deletePost = useMutation(api.post.deletePost);
   const createComment = useMutation(api.comments.create);
+  const toggleUpvote = useMutation(api.vote.toggleUpvote);
+  const toggleDownvote = useMutation(api.vote.toggleDownvote);
+
+  const voteCounts = useQuery(api.vote.getVoteCount, { postId: post._id });
+  const hasUpvoted = useQuery(api.vote.hasUpvoted, { postId: post._id });
+  const hasDownvoted = useQuery(api.vote.hasDownvoted, { postId: post._id });
 
   const comments = useQuery(api.comments.getComments, { postId: post._id });
+  const commentCount = useQuery(api.comments.getCommentCount, {
+    postId: post._id,
+  });
+
+  const onUpvote = () => {
+    toggleUpvote({ postId: post._id });
+  };
+
+  const onDownvote = () => {
+    toggleDownvote({ postId: post._id });
+  };
 
   const handleComment = () => {
     if (!expandedView) {
@@ -194,12 +252,19 @@ const PostCard = ({
   const handleSubmitComment = (content: string) => {
     createComment({
       content,
-      postId: post._id
+      postId: post._id,
     });
   };
 
   return (
     <div className={`post-card ${showComments ? "expanded" : ""}`}>
+      <VoteButtons
+        voteCounts={voteCounts}
+        hasUpvoted={hasUpvoted}
+        hasDownvoted={hasDownvoted}
+        onUpvote={user ? onUpvote : () => {}}
+        onDownvote={user ? onDownvote : () => {}}
+      />
       <div className="post-content">
         <PostHeader
           author={post.author}
@@ -216,7 +281,7 @@ const PostCard = ({
         <div className="post-actions">
           <button className="action-button" onClick={handleComment}>
             <FaRegCommentAlt />
-            <span> 0 Comments</span>
+            <span>{commentCount ?? 0} Comments</span>
           </button>
           {ownedByCurrentUser && (
             <button

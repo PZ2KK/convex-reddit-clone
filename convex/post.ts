@@ -2,6 +2,7 @@ import { mutation, query, QueryCtx } from "./_generated/server";
 import { ConvexError, convexToJson, v } from "convex/values";
 import { getCurrentUserOrThrow } from "./users";
 import { Doc, Id } from "./_generated/dataModel";
+import { counts, postCountKey } from "./counter";
 
 type EnrichedPost = Omit<Doc<"post">, "subreddit"> & {
   author: { username: string } | undefined;
@@ -36,6 +37,7 @@ export const create = mutation({
       authorId: user._id,
       image: args.storageId || undefined,
     });
+    await counts.inc(ctx, postCountKey(user._id));
     return postId;
   },
 });
@@ -66,7 +68,7 @@ export const getEnrichedPosts = async (
   posts: Doc<"post">[]
 ): Promise<EnrichedPost[]> => {
   return Promise.all(posts.map((post) => getEnrichedPost(ctx, post)));
-}
+};
 
 export const getPost = query({
   args: { id: v.id("post") },
@@ -120,13 +122,42 @@ export const deletePost = mutation({
   args: { id: v.id("post") },
   handler: async (ctx, args) => {
     const post = await ctx.db.get(args.id);
-    if (!post) throw new ConvexError({ message: ERROR_MESSAGES.POST_NOT_FOUND });
+    if (!post)
+      throw new ConvexError({ message: ERROR_MESSAGES.POST_NOT_FOUND });
 
     const user = await getCurrentUserOrThrow(ctx);
     if (post.authorId !== user._id) {
       throw new ConvexError({ message: ERROR_MESSAGES.UNAUTHORIZED_DELETE });
     }
+    await counts.inc(ctx, postCountKey(user._id));
+    await ctx.db.delete(args.id);
+  },
+});
 
-    await ctx.db.delete(args.id)
+export const search = query({
+  args: { queryStr: v.string(), subreddit: v.string() },
+  handler: async (ctx, args) => {
+    if (!args.queryStr) return [];
+
+    const subredditObj = await ctx.db
+      .query("subreddit")
+      .filter((q) => q.eq(q.field("name"), args.subreddit))
+      .unique();
+
+    if (!subredditObj) return [];
+
+    const posts = await ctx.db
+      .query("post")
+      .withSearchIndex("search_body", (q) =>
+        q.search("subject", args.queryStr).eq("subreddit", subredditObj._id)
+      )
+      .take(10);
+
+    return posts.map((post) => ({
+      _id: post._id,
+      title: post.subject,
+      type: "post",
+      name: subredditObj.name,
+    }));
   },
 });

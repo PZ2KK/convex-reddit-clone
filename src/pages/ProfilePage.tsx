@@ -9,6 +9,9 @@ const ProfilePage = () => {
   const posts = useQuery(api.post.userPosts, {
     authorUsername: username || "",
   });
+  const stats = useQuery(api.users.getPublicUser, {
+    username: username || "",
+  });
 
   if (posts === undefined)
     return (
@@ -20,23 +23,25 @@ const ProfilePage = () => {
       </div>
     );
 
-  return <div className="content-container">
-    <div className="profile-header">
-      <h1>u/{username}</h1>
-      <p style={{color: "#7c7c7c"}}>Posts: {posts.length}</p>
-    </div>
-    <div className="posts-container">
+  return (
+    <div className="content-container">
+      <div className="profile-header">
+        <h1>u/{username}</h1>
+        <p style={{ color: "#7c7c7c" }}>Posts: {stats?.posts ?? 0}</p>
+      </div>
+      <div className="posts-container">
         {posts.length === 0 ? (
-            <div className="no-posts">
-                <p>No posts yet.</p>
-            </div>
+          <div className="no-posts">
+            <p>No posts yet.</p>
+          </div>
         ) : (
-            posts.map((post) => (
-                <PostCard key={post._id} post={post} showSubreddit={true}/>
-            ))
+          posts.map((post) => (
+            <PostCard key={post._id} post={post} showSubreddit={true} />
+          ))
         )}
+      </div>
     </div>
-  </div>;
+  );
 };
 
 export default ProfilePage;

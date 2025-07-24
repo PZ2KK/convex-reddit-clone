@@ -1,7 +1,7 @@
 import { mutation, query } from "./_generated/server";
 import { getCurrentUserOrThrow } from "./users";
 import { v, ConvexError } from "convex/values";
-import {getEnrichedPosts} from "./post";
+import { getEnrichedPosts } from "./post";
 
 export const create = mutation({
   args: {
@@ -36,8 +36,28 @@ export const get = query({
       .withIndex("bySubreddit", (q) => q.eq("subreddit", subreddit._id))
       .collect();
 
-    const enrichedPosts = await getEnrichedPosts(ctx, posts); 
+    const enrichedPosts = await getEnrichedPosts(ctx, posts);
 
-    return {...subreddit, posts: enrichedPosts};
+    return { ...subreddit, posts: enrichedPosts };
+  },
+});
+
+export const search = query({
+  args: { queryStr: v.string() },
+  handler: async (ctx, args) => {
+    if (!args.queryStr) return [];
+
+    const subreddits = await ctx.db
+      .query("subreddit")
+      .withSearchIndex("search_body", (q) => q.search("name", args.queryStr))
+      .take(10);
+
+    return subreddits.map((sub) => {
+      return {
+        ...sub,
+        type: "community",
+        title: sub.name,
+      };
+    });
   },
 });
