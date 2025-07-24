@@ -8,12 +8,11 @@ import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
 import Comment from "./Comment";
 import "../styles/PostCard.css";
-import { hasDownvoted, hasUpvoted } from "../../convex/vote";
 
 interface Post {
   _id: Id<"post">;
   subject: string;
-  body: string;
+  body?: string;
   _creationTime: number;
   authorId: string;
   imageUrl?: string;
