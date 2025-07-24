@@ -1,7 +1,8 @@
-import { mutation, query, QueryCtx } from "./_generated/server";
-import { ConvexError, convexToJson, v } from "convex/values";
+import { mutation, query } from "./_generated/server";
+import type { QueryCtx } from "./_generated/server";
+import { ConvexError, v } from "convex/values";
 import { getCurrentUserOrThrow } from "./users";
-import { Doc, Id } from "./_generated/dataModel";
+import type { Doc, Id } from "./_generated/dataModel";
 import { counts, postCountKey } from "./counter";
 
 type EnrichedPost = Omit<Doc<"post">, "subreddit"> & {

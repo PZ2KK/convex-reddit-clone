@@ -5,10 +5,12 @@ import PostCard from "../components/PostCard.tsx"
 import {FaArrowLeft} from "react-icons/fa"
 import "../styles/PostPage.css"
 
+import type { Id } from "../../convex/_generated/dataModel";
+
 const PostPage = () => {
-    const {postId} = useParams()
-    const navigate = useNavigate()
-    const post = useQuery(api.post.getPost, {id: postId!})
+    const { postId } = useParams<{ postId: string }>();
+    const navigate = useNavigate();
+    const post = useQuery(api.post.getPost, { id: postId as Id<"post"> });
 
     if (!post) {
         return <div className="post-page loading">
