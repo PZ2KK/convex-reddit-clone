@@ -1,6 +1,6 @@
 import {components} from "./_generated/api";
 import { ShardedCounter } from "@convex-dev/sharded-counter";
-import { Id } from "./_generated/dataModel";
+import type { Id } from "./_generated/dataModel";
 
 export const counts = new ShardedCounter(
     components.shardedCounter,
