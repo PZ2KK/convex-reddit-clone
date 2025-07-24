@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import CreateCommunityModal from "./CreateCommunityModal";
-import "../styles/CreateDropDown.css";
+import "../styles/CreateDropdown.css";
 
 interface CreateDropDownProps {
   isOpen: boolean;
