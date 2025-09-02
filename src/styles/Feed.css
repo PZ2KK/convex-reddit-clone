@@ -1,15 +1,44 @@
 .content-grid {
   display: grid;
   grid-template-columns: 1fr;
+  gap: 16px;
   width: 100%;
   margin: 0;
-  padding: 10px;
+  padding-top: 16px;
+}
+
+/* Two columns on larger screens */
+@media (min-width: 900px) {
+  .content-grid {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+/* Removed asymmetric spanning to place Random Posts under Top Voted naturally */
+
+/* Asymmetric two-column layout using explicit columns */
+.content-grid.two-col {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 900px) {
+  .content-grid.two-col {
+    grid-template-columns: 2fr 1fr; /* left wider than right */
+  }
+}
+
+/* Stack boxes in each column with space between them */
+.column-left,
+.column-right {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* space between Top Voted and Random Posts */
 }
 
 .feed-container {
   width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
+  margin: 0; /* allow grid to control placement */
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -31,5 +60,14 @@
   flex-direction: column;
   width: 100%;
   gap: 10px;
+}
+
+/* Centered loading state container */
+.loading-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 60vh;
 }
 

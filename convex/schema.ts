@@ -23,6 +23,13 @@ export default defineSchema({
     .searchIndex("search_body", {searchField: "subject", filterFields: ["subreddit"]})
     .index("bySubreddit", ["subreddit"])
     .index("byAuthor", ["authorId"]),
+  search_history: defineTable({
+    userId: v.id("users"),
+    term: v.string(),
+    lastSearchedAt: v.number(),
+  })
+    .index("byUser", ["userId"])
+    .index("byUserTerm", ["userId", "term"]),
   comments: defineTable({
     content: v.string(),
     postId: v.id("post"),

@@ -3,12 +3,13 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import PostCard from "../components/PostCard";
 import "../styles/SubredditPage.css";
+import Spinner from "../components/Spinner";
 
 const SubredditPage = () => {
   const { subredditName } = useParams();
   const subreddit = useQuery(api.subreddit.get, { name: subredditName || "" });
 
-  if (subreddit === undefined) return <p>Loading...</p>;
+  if (subreddit === undefined) return <Spinner />;
 
   if (!subreddit) {
     return (

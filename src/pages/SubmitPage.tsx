@@ -5,13 +5,14 @@ import { api } from "../../convex/_generated/api";
 import { FaImage } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import "../styles/SubmitPage.css";
+import Spinner from "../components/Spinner";
 
 const SubmitPage = () => {
   const { subredditName } = useParams();
   const navigate = useNavigate();
   const subreddit = useQuery(api.subreddit.get, { name: subredditName || "" });
 
-  if (subreddit === undefined) return <p>Loading...</p>;
+  if (subreddit === undefined) return <Spinner />;
 
   if (!subreddit) {
     return (

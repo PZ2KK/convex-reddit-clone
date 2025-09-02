@@ -9,11 +9,12 @@ export const getTopPosts = query({
     const limit = args.limit ?? 10;
 
     const now = new Date();
-    const oneDayAgo = new Date(now.getTime() - 1000 * 60 * 60 * 24);
+    // Last 30 days (approximate one month)
+    const oneMonthAgo = new Date(now.getTime() - 1000 * 60 * 60 * 24 * 30);
     const posts = await ctx.db
       .query("post")
       .withIndex("by_creation_time")
-      .filter((q) => q.gt(q.field("_creationTime"), oneDayAgo.getTime()))
+      .filter((q) => q.gt(q.field("_creationTime"), oneMonthAgo.getTime()))
       .collect();
 
     const postWithScores = await Promise.all(
@@ -26,6 +27,7 @@ export const getTopPosts = query({
 
         const author = await ctx.db.get(post.authorId);
         const subreddit = await ctx.db.get(post.subreddit);
+        const image = post.image && (await ctx.storage.getUrl(post.image));
 
         return {
           ...post,
@@ -34,6 +36,7 @@ export const getTopPosts = query({
           downvotes,
           author: { username: author?.username ?? "[deleted]" },
           subreddit: { name: subreddit?.name ?? "[deleted]" },
+          imageUrl: image ?? undefined,
         };
       })
     );

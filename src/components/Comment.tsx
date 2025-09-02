@@ -27,7 +27,7 @@ const Comment = ({ comment }: CommentProps) => {
         )}
         <span className="comment-dot">-</span>
         <span className="comment-timestamp">
-          {new Date(comment._creationTime).toLocaleString()}
+          {new Date(comment._creationTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
         </span>
       </div>
       <div className="comment-content">

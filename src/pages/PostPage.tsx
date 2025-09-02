@@ -4,6 +4,7 @@ import {api} from "../../convex/_generated/api"
 import PostCard from "../components/PostCard.tsx"
 import {FaArrowLeft} from "react-icons/fa"
 import "../styles/PostPage.css"
+import Spinner from "../components/Spinner";
 
 import type { Id } from "../../convex/_generated/dataModel";
 
@@ -15,7 +16,7 @@ const PostPage = () => {
     if (!post) {
         return <div className="post-page loading">
             <div className="container">
-                Loading...
+                <Spinner />
             </div>
         </div>
     }

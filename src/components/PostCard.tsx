@@ -42,6 +42,7 @@ interface PostContentProps {
   body?: string;
   image?: string;
   expandedView: boolean;
+  postId: Id<"post">;
 }
 
 interface CommentSectionProps {
@@ -115,7 +116,7 @@ const PostHeader = ({
       )}
       <span className="post-dot">-</span>
       <span className="post-timestamp">
-        {new Date(creationTime).toLocaleString()}
+        {new Date(creationTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
       </span>
     </div>
   );
@@ -126,12 +127,15 @@ const PostContent = ({
   body,
   image,
   expandedView,
+  postId,
 }: PostContentProps) => {
   return (
     <>
       {expandedView ? (
         <>
-          <h1 className="post-title">{subject}</h1>
+          <h1 className="post-title">
+            <Link to={`/post/${postId}`} className="post-title-link">{subject}</Link>
+          </h1>
           {image && (
             <div className="post-image-container">
               <img src={image} alt="Post content" className="post-image" />
@@ -142,14 +146,32 @@ const PostContent = ({
       ) : (
         <div className="preview-post">
           <div>
-            <h2 className="post-title">{subject}</h2>
-            {body && <p className="post-body">{body}</p>}
+            <h2 className="post-title">
+              <Link to={`/post/${postId}`} className="post-title-link">{subject}</Link>
+            </h2>
+            {image && (
+              <div className="post-image-container small-img">
+                <img src={image} alt="Post content" className="post-image" />
+              </div>
+            )}
+            {body && (
+              <>
+                {(() => {
+                  const MAX_CHARS = 220;
+                  const isLong = body.length > MAX_CHARS;
+                  const previewBody = isLong ? body.slice(0, MAX_CHARS).trim() + "…" : body;
+                  return (
+                    <>
+                      <p className="post-body">{previewBody}</p>
+                      {isLong && (
+                        <Link to={`/post/${postId}`} className="read-more">Read more</Link>
+                      )}
+                    </>
+                  );
+                })()}
+              </>
+            )}
           </div>
-          {image && (
-            <div className="post-image-container small-img">
-              <img src={image} alt="Post content" className="post-image" />
-            </div>
-          )}
         </div>
       )}
     </>
@@ -276,6 +298,7 @@ const PostCard = ({
           body={post.body}
           image={post.imageUrl}
           expandedView={expandedView}
+          postId={post._id}
         />
         <div className="post-actions">
           <button className="action-button" onClick={handleComment}>

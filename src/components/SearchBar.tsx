@@ -2,8 +2,9 @@ import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import { api } from "../../convex/_generated/api";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import "../styles/SearchBar.css";
+import { useUser } from "@clerk/clerk-react";
 
 interface SearchResult {
   _id: string;
@@ -21,6 +22,8 @@ const SearchBar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isActive, setIsActive] = useState(false);
   let results: SearchResult[] = [];
+  const { user } = useUser();
+  const logSearch = useMutation(api.recommendations.logSearch);
 
   //perform search
   if (!currentSubreddit) {
@@ -48,7 +51,15 @@ const SearchBar = () => {
     setSearchQuery(e.target.value);
   };
 
-  const handleResultClick = (result: SearchResult) => {
+  const handleResultClick = async (result: SearchResult) => {
+    // Log the raw search query to power recommendations (only if signed in)
+    if (user && searchQuery.trim()) {
+      try {
+        await logSearch({ term: searchQuery.trim() });
+      } catch (_) {
+        // non-blocking
+      }
+    }
     if (result.type === "post") {
       navigate(`/post/${result._id}`);
     } else {

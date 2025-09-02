@@ -59,6 +59,25 @@
   background-color: rgba(255, 69, 0, 0.1);
 }
 
+/* Explicit styles for current vote state */
+.vote-button.upvoted {
+  color: #22c55e; /* green */
+}
+
+.vote-button.upvoted:hover {
+  color: #16a34a; /* darker green on hover */
+  background-color: rgba(34, 197, 94, 0.1);
+}
+
+.vote-button.downvoted {
+  color: #ff4444; /* match delete color */
+}
+
+.vote-button.downvoted:hover {
+  color: #cc0000; /* match delete hover color */
+  background-color: rgba(255, 68, 68, 0.1);
+}
+
 .vote-button:disabled {
   cursor: not-allowed;
   opacity: 0.5;
@@ -108,6 +127,28 @@
   font-weight: 500;
   margin: 0 0 8px 0;
   color: #1a1a1b;
+}
+
+.post-title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.post-title-link:hover {
+  text-decoration: underline;
+  color: #5E5E5E;
+}
+
+.post-title-link:visited {
+  color: inherit;
+}
+
+.post-header a {
+  text-decoration: none;
+}
+
+.post-header a:hover {
+  text-decoration: underline;
 }
 
 .post-body {
@@ -310,4 +351,18 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+/* Read more link under truncated body */
+.read-more {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: #0079d3;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.read-more:hover {
+  text-decoration: underline;
 }
