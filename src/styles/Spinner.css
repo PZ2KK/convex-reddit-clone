@@ -1,0 +1,27 @@
+/* Basic spinner */
+.spinner-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 120px;
+}
+
+.spinner-wrapper.fullscreen {
+  min-height: 50vh;
+}
+
+.spinner {
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-top-color: #0079d3; /* Reddit blue */
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.spinner.sm { width: 20px; height: 20px; border-width: 2px; }
+.spinner.md { width: 36px; height: 36px; border-width: 3px; }
+.spinner.lg { width: 56px; height: 56px; border-width: 4px; }
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
