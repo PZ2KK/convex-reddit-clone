@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
-import { useUser, SignInButton } from "@clerk/clerk-react";
+import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
 import Comment from "./Comment";
 import "../styles/PostCard.css";
@@ -231,19 +231,19 @@ const PostCard = ({
   const { user } = useUser();
   const ownedByCurrentUser = post.author?.username === user?.username;
 
+  // Mutations
   const deletePost = useMutation(api.post.deletePost);
   const createComment = useMutation(api.comments.create);
   const toggleUpvote = useMutation(api.vote.toggleUpvote);
   const toggleDownvote = useMutation(api.vote.toggleDownvote);
 
+  // Queries
   const voteCounts = useQuery(api.vote.getVoteCount, { postId: post._id });
   const hasUpvoted = useQuery(api.vote.hasUpvoted, { postId: post._id });
   const hasDownvoted = useQuery(api.vote.hasDownvoted, { postId: post._id });
 
   const comments = useQuery(api.comments.getComments, { postId: post._id });
-  const commentCount = useQuery(api.comments.getCommentCount, {
-    postId: post._id,
-  });
+  const commentCount = useQuery(api.comments.getCommentCount, { postId: post._id });
 
   const onUpvote = () => {
     toggleUpvote({ postId: post._id });
@@ -279,27 +279,14 @@ const PostCard = ({
 
   return (
     <div className={`post-card ${showComments ? "expanded" : ""}`}>
-      {user ? (
-        <VoteButtons
-          voteCounts={voteCounts}
-          hasUpvoted={hasUpvoted}
-          hasDownvoted={hasDownvoted}
-          onUpvote={onUpvote}
-          onDownvote={onDownvote}
-        />
-      ) : (
-        <SignInButton mode="modal">
-          <div>
-            <VoteButtons
-              voteCounts={voteCounts}
-              hasUpvoted={false}
-              hasDownvoted={false}
-              onUpvote={() => {}}
-              onDownvote={() => {}}
-            />
-          </div>
-        </SignInButton>
-      )}
+      <VoteButtons
+        voteCounts={voteCounts}
+        hasUpvoted={hasUpvoted}
+        hasDownvoted={hasDownvoted}
+        onUpvote={user ? onUpvote : () => {}}
+        onDownvote={user ? onDownvote : () => {}}
+      />
+
       <div className="post-content">
         <PostHeader
           author={post.author}
