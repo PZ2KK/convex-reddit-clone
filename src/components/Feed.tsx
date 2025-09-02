@@ -77,7 +77,7 @@ export function Feed() {
               );
             })}
             {recommended && recommended.length === 0 && (
-              <div>No recommendations yet. Try searching for communities.</div>
+              <div className="empty-state">There are no recommended posts yet. Please log in and search for something.</div>
             )}
           </div>
         </div>

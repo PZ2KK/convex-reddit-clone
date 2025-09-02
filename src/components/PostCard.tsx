@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
-import { useUser } from "@clerk/clerk-react";
+import { useUser, SignInButton } from "@clerk/clerk-react";
 import { useState } from "react";
 import Comment from "./Comment";
 import "../styles/PostCard.css";
@@ -279,13 +279,27 @@ const PostCard = ({
 
   return (
     <div className={`post-card ${showComments ? "expanded" : ""}`}>
-      <VoteButtons
-        voteCounts={voteCounts}
-        hasUpvoted={hasUpvoted}
-        hasDownvoted={hasDownvoted}
-        onUpvote={user ? onUpvote : () => {}}
-        onDownvote={user ? onDownvote : () => {}}
-      />
+      {user ? (
+        <VoteButtons
+          voteCounts={voteCounts}
+          hasUpvoted={hasUpvoted}
+          hasDownvoted={hasDownvoted}
+          onUpvote={onUpvote}
+          onDownvote={onDownvote}
+        />
+      ) : (
+        <SignInButton mode="modal">
+          <div>
+            <VoteButtons
+              voteCounts={voteCounts}
+              hasUpvoted={false}
+              hasDownvoted={false}
+              onUpvote={() => {}}
+              onDownvote={() => {}}
+            />
+          </div>
+        </SignInButton>
+      )}
       <div className="post-content">
         <PostHeader
           author={post.author}

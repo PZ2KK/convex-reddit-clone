@@ -71,3 +71,8 @@
   min-height: 60vh;
 }
 
+/* Muted/gray text for empty states */
+.empty-state {
+  color: #6b7280; /* gray-500 */
+  font-size: 14px;
+}

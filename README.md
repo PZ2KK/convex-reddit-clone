@@ -1,4 +1,4 @@
-# Reddit Clone — React + Vite + TypeScript + Convex + Clerk
+# Reddit Clone App
 
 An educational Reddit-style app built with React 19, Vite, TypeScript, Convex (backend/database), Clerk (authentication), and React Router. Deployed as a single-page app (SPA) with Vercel rewrites (`vercel.json`).
 
@@ -8,7 +8,7 @@ An educational Reddit-style app built with React 19, Vite, TypeScript, Convex (b
 
 You can check the project at : https://convex-reddit-clone.vercel.app/
 
-If you don't want to register you can use following ID and Password :
+If you don't want to register you can use following ID and Password
 
 ### ID : 
 ```
@@ -20,7 +20,9 @@ Usertestid
 ```
 
 ## Features
-- Create posts, comments, and communities
+- Create posts, comments, and communities with image uploader
+- Search Bar with search history
+- Trending Posts, recommended posts, random posts to show on feed
 - Auth via Clerk
 - Real-time data via Convex
 
